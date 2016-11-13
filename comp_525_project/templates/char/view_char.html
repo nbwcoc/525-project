@@ -1,0 +1,73 @@
+{% load humanize %} 
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td> {{ query.name }} </td>
+        </tr>
+        <tr>
+            <td>Class:</td>
+            <td>
+                {% for level in levels %}
+                {% if query.experience > level.0 %}
+                {{ forloop.counter|ordinal }}
+                {% endif %}
+                {% endfor %}
+                level 
+                {{ query.player_class.name }}
+            </td>
+        </tr>
+        <tr>
+            <td>Background:</td>
+            <td> {{ query.background.name }} </td>
+        </tr>
+        <tr>
+            <td>Race:</td>
+            <td> {{ query.race.name }} </td>
+        </tr>
+        <tr>
+            <td>Alignment:</td>
+            <td> {{ query.alignment }} </td>
+        </tr>
+        <tr>
+            <td>Experience:</td>
+            <td> {{ query.experience }} </td>
+        </tr>
+        <tr>
+            <td>STR:</td>
+            <td> {{ query.strength }} </td>
+        </tr>
+        <tr>
+            <td>DEX:</td>
+            <td> {{ query.dexterity }} </td>
+        </tr>
+        <tr>
+            <td>CON:</td>
+            <td> {{ query.constitution }} </td>
+        </tr>
+        <tr>
+            <td>INT:</td>
+            <td> {{ query.intelligence }} </td>
+        </tr>
+        <tr>
+            <td>WIS:</td>
+            <td> {{ query.wisdom }} </td>
+        </tr>
+        <tr>
+            <td>CHA:</td>
+            <td> {{ query.charisma }} </td>
+        </tr>
+        <tr>
+            <td>HP:</td>
+            <td> {{ query.max_hp }} </td>
+        </tr>
+        <tr>
+            <td>notes:</td>
+            <td> {{ query.notes }} </td>
+        </tr>
+    </table>
+</body>
+</html>
