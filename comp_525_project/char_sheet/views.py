@@ -55,7 +55,14 @@ def view_char(request):
         (305000, 6),
         (355000, 6),
     ]
+
+    level = 0
+
+    for level_pair in levels:
+        if q.experience > level_pair[0]:
+            level += 1
+
     context = {"id": request.GET["cid"], "query": q, "levels": levels,
                "classes": player_classes, "races": races,
-               "backgrounds": backgrounds}
+               "backgrounds": backgrounds, "level": level}
     return render(request, "char/view_char.html", context)

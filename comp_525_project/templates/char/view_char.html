@@ -11,11 +11,7 @@
         <tr>
             <td>Class:</td>
             <td>
-                {% for level in levels %}
-                {% if query.experience > level.0 %}
-                {{ forloop.counter|ordinal }}
-                {% endif %}
-                {% endfor %}
+                {{ level|ordinal }}
                 level 
                 {{ query.player_class.name }}
             </td>
