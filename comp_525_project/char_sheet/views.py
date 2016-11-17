@@ -7,6 +7,19 @@ from . import encoder
 # Create your views here.
 
 def dump(request):
+    """
+    JSON database dump view
+
+    GET parameters (only accepts one):
+    cid: id in the database of the character to dump
+    rid: id in the database of the race to dump
+    bid: id in the database of the background to dump
+    pcid: id in the database of the class to dump
+
+    Returns:
+    JSON of the requested database row
+    Empty JSON if no GET argument
+    """
     if "cid" in request.GET:
         return JsonResponse(models.Character.objects.filter(
             id=request.GET["cid"])[0],
@@ -26,6 +39,24 @@ def dump(request):
     return JsonResponse({})
 
 def view_char(request):
+    """
+    Displays character information in a table
+
+    GET parameters:
+    cid: id in the database of the character to display
+
+    returns:
+    HTTP status 400 on bad request
+    render of the file at char/view_char.html with the context:
+        id: cid passed from GET params
+        query: the character's row in the database
+        levels: a list of tuples in the form (required experience, proficiency
+                bonus)
+        classes: all classes in the database
+        races: all races in the database
+        backgrounds: all backgrounds in the database
+        level: the character's current level
+    """
     if not "cid" in request.GET:
         return HttpResponse(status=400)
     #return HttpResponse(status=501)
