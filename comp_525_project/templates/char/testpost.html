@@ -1,0 +1,14 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test</title>
+</head>
+<body>
+	<form id="form" method="post">
+		{% csrf_token %} 
+		<input id="jsonData" type="text" name="data" />
+		<input id="submitButton" type="submit" formaction="/char/update/" />
+	</form>
+</body>
+</html>
