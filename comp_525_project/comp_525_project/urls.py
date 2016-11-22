@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name="index.html"), name="index"),
     url(r'^char/', include("char_sheet.urls")),
     url(r'^admin/', admin.site.urls),
+    url(r'^make-campaign/', TemplateView.as_view(template_name="html/m_campaign.html"), name="m_campaign"),
 ]
