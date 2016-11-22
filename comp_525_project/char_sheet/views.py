@@ -121,7 +121,7 @@ def update(request):
     success with the item's id in the body.
     """
     if request.method != "POST":
-        return HttpResponse(status=400)
+        return HttpResponse(status=405)
 
     if len(request.POST) > 0:
         if not "data" in request.POST:

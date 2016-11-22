@@ -27,7 +27,7 @@ class CharacterEncoder(DjangoJSONEncoder):
                 "wisdom": obj.wisdom,
                 "charisma": obj.charisma,
                 "max_hp": obj.max_hp,
-                "proficiencies_mask": obj.proficiencies_mask,
+                #"proficiencies_mask": obj.proficiencies_mask,
                 "notes": obj.notes
             }
         return super(CharacterEncoder, self).default(obj)
