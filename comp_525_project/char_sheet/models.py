@@ -250,7 +250,7 @@ class Character(models.Model):
                                       related_name='+')
     can_edit = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                       related_name='+')
-    equipment = models.ManyToManyField(Item)
+    equipment = models.ManyToManyField("Item")
     equipment_quantities = models.CharField(
         max_length=4096,
         validators=[validators.validate_comma_separated_integer_list],
