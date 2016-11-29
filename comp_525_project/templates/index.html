@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <title>Bruenor's Bash - Dungeons and Dragons for the 21st Century</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Bootcards CSS for desktop: -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/css/bootcards-desktop.min.css">
+    <link rel="stylesheet" href="../static/css/stylesheet.css">
+    <script	  src="https://code.jquery.com/jquery-3.1.1.min.js"
+			  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+			  crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/js/bootcards.min.js"></script>
+    <script src="https://use.fontawesome.com/829bd5f339.js"></script>
+  </head>
+  <body>
+      <!-- Begin Top NavBar -->
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+          <div class="container">
+              <div class="navbar-header">
+                  <!--
+                      Begin Button
+                          - navbar-toggle: toggable navbar
+                          - callapse: we can collapse this with bootcard js file
+                  -->
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand no-break-out" title="Bruenor's Bash Home" href="../index.html">Bruenor's Bash</a>
+              </div>
+              <div class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                      <li class="dropdown">
+                        <a class="dropdown-toggle" href="#" data-toggle="dropdown">Login<strong class="caret"></strong></a>
+                        <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+                            <!-- Login form here -->
+                            <form action="[YOUR ACTION]" method="post" accept-charset="UTF-8">
+                                  <input id="user_username" style="margin-bottom: 15px;" type="text" name="user[username]" size="30">username</input>
+                                  <input id="user_password" style="margin-bottom: 15px;" type="password" name="user[password]" size="30" />
+
+                                  <input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />
+                            </form>
+                        </div>
+                      </li>
+                      <li class="divider-vertical"></li>
+                      <li>
+                          <a href="#">
+                              <i class="fa fa-building-o"></i> Login
+                          </a>
+                      </li>
+                      <li>
+                          <a href="settings.html">
+                              <i class="fa fa-gears"></i> Stories
+                          </a>
+                      </li>
+                      <li>
+                          <a href="settings.html">
+                              <i class="fa fa-gears"></i> Settings
+                          </a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+      <!-- End Top NavBar -->
+      <div class="jumbotron">
+          <div class="container" id="jumbo_tron">
+            <h1>Join a Campaign</h1>
+            <p>Or start a new one! Just leave the campaign name blank.</p>
+            <p><a class="btn btn-primary btn-lg" href="html/my_character.html" role="button">Continue Your Quest</a></p>
+          </div>
+      </div>
+      <script>
+      /*
+     * Initialize Bootcards.
+     *
+     * Parameters:
+     * - offCanvasBackdrop (boolean): show a backdrop when the offcanvas is shown
+     * - offCanvasHideOnMainClick (boolean): hide the offcanvas menu on clicking outside the off canvas
+     * - enableTabletPortraitMode (boolean): enable single pane mode for tablets in portraitmode
+     * - disableRubberBanding (boolean): disable the iOS rubber banding effect
+     * - disableBreakoutSelector (string) : for iOS apps that are added to the home screen:
+                          jQuery selector to target links for which a fix should be added to not
+                          allow those links to break out of fullscreen mode.
+     */
+
+    bootcards.init( {
+      offCanvasBackdrop : true,
+      offCanvasHideOnMainClick : true,
+      enableTabletPortraitMode : true,
+      disableRubberBanding : true,
+      disableBreakoutSelector : 'a.no-break-out'
+    });
+      </script>
+  </body>
+</html>
