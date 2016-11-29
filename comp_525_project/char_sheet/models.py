@@ -60,7 +60,16 @@ class PlayerClass(models.Model):
     char[36] skill_proficiencies //CSV of either 1 or 0. This will have a
                                    custom validator eventually. Defaults to
                                    all 0.
-    int skills_number
+    int skills_number = 2
+    char[220] spell_slots //CSV. These values are grouped by tens; the first
+                            ten represent spell slots at level 1, the second
+                            ten represent spell slots at level 2, and so one.
+                            This will be reformatted and given a custom
+                            validator later. The first value for each level
+                            (corresponding to level 0 spells) should be
+                            interpreted as cantrips known, since no class has
+                            0th level spell "slots"
+    int spells_known = 0
 
     Information listed in the PHB:
     name
@@ -89,6 +98,16 @@ class PlayerClass(models.Model):
         validators=[validators.validate_comma_separated_integer_list],
         default="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
     skills_number = models.IntegerField(default=2)
+    spell_slots = models.CharField(
+        max_length=220,
+        validators=[validators.validate_comma_separated_integer_list],
+        default="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"
+        "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"
+        "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"
+        "0,0,0,0,0,0,0,0,0,0,0,0")
+    spells_known = models.IntegerField(default=0)
+
+
 
     def __str__(self):
         return self.name
@@ -231,6 +250,15 @@ class Character(models.Model):
                                       related_name='+')
     can_edit = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                       related_name='+')
+    equipment = models.ManyToManyField(Item)
+    equipment_quantities = models.CharField(
+        max_length=4096,
+        validators=[validators.validate_comma_separated_integer_list],
+        null=True,
+        blank=True)
+    current_hp = models.IntegerField(default=0)
+    temp_hp = models.IntegerField(default=0)
+
 
     def __str__(self):
         return "Character: " + self.name
