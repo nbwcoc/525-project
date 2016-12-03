@@ -14,21 +14,28 @@ class CharacterEncoder(DjangoJSONEncoder):
     def default(self, obj):
         if isinstance(obj, models.Character):
             return {
-                "name": obj.name,
-                "player_class": obj.player_class.id,
-                "background": obj.background.id,
-                "race": obj.race.id,
-                "alignment": obj.alignment,
-                "experience": obj.experience,
-                "strength": obj.strength,
-                "dexterity": obj.dexterity,
-                "constitution": obj.constitution,
-                "intelligence": obj.intelligence,
-                "wisdom": obj.wisdom,
-                "charisma": obj.charisma,
-                "max_hp": obj.max_hp,
-                #"proficiencies_mask": obj.proficiencies_mask,
-                "notes": obj.notes
+                "name" = obj.name
+                "player_class" = obj.player_class
+                "background" = obj.background
+                "race" = obj.race
+                "alignment" = obj.alignment
+                "experience" = obj.experience
+                "strength" = obj.strength
+                "dexterity" = obj.dexterity
+                "constitution" = obj.constitution
+                "intelligence" = obj.intelligence
+                "wisdom" = obj.wisdom
+                "charisma" = obj.charisma
+                "max_hp" = obj.max_hp
+                "proficiencies" = obj.proficiencies
+                "notes" = obj.notes
+                "owner" = obj.owner
+                "can_view" = obj.can_view
+                "can_edit" = obj.can_edit
+                "equipment" = obj.equipment
+                "equipment_quantities" = obj.equipment_quantities
+                "current_hp" = obj.current_hp
+                "temp_hp" = obj.temp_hp
             }
         return super(CharacterEncoder, self).default(obj)
 

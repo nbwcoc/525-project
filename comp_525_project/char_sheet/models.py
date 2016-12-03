@@ -47,6 +47,27 @@ class Race(models.Model):
     def __str__(self):
         return self.name
 
+class Spell(models.Model):
+    """
+    Model for spells
+
+    Class information stored:
+
+    Information listed in the SRD:
+    name
+    level (spell)
+    school
+    cast time (rounds, seconds, minutes)
+    components (V,S,M,F) //5e might not have focus components
+    duration (instantaneous, rounds, minutes, hours)
+    range
+    description (attacks, attack rolls, targets, saving throws, higher level
+                 casting, targets (number, cube, cone))
+    """
+    name = models.CharField(default="", max_length=255)
+    level = models.IntegerField(default=0)
+    
+
 class PlayerClass(models.Model):
     """
     Model for classes
@@ -63,7 +84,7 @@ class PlayerClass(models.Model):
     int skills_number = 2
     char[220] spell_slots //CSV. These values are grouped by tens; the first
                             ten represent spell slots at level 1, the second
-                            ten represent spell slots at level 2, and so one.
+                            ten represent spell slots at level 2, and so on.
                             This will be reformatted and given a custom
                             validator later. The first value for each level
                             (corresponding to level 0 spells) should be
