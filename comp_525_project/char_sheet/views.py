@@ -22,21 +22,40 @@ def dump(request):
     Empty JSON if no GET argument
     """
     if "cid" in request.GET:
-        return JsonResponse(models.Character.objects.filter(
-            id=request.GET["cid"])[0],
-            encoder=encoder.CharacterEncoder, safe=False)
+        return JsonResponse(
+            models.Character.objects.filter(id=request.GET["cid"])[0],
+            encoder=encoder.CharacterEncoder,
+            safe=False)
     if "rid" in request.GET:
-        return JsonResponse(models.Race.objects.filter(
-            id=request.GET["rid"])[0],
-            encoder=encoder.RaceEncoder, safe=False)
+        return JsonResponse(
+            models.Race.objects.filter(id=request.GET["rid"])[0],
+            encoder=encoder.RaceEncoder,
+            safe=False)
     if "bid" in request.GET:
-        return JsonResponse(models.Background.objects.filter(
-            id=request.GET["bid"])[0],
-            encoder=encoder.BackgroundEncoder, safe=False)
+        return JsonResponse(
+            models.Background.objects.filter(id=request.GET["bid"])[0],
+            encoder=encoder.BackgroundEncoder,
+            safe=False)
     if "pcid" in request.GET:
-        return JsonResponse(models.PlayerClass.objects.filter(
-            id=request.GET["pcid"])[0],
-            encoder=encoder.PlayerClassEncoder, safe=False)
+        return JsonResponse(
+            models.PlayerClass.objects.filter(id=request.GET["pcid"])[0],
+            encoder=encoder.PlayerClassEncoder,
+            safe=False)
+    if "akid" in request.GET:
+        return JsonResponse(
+            models.Attack.objects.filter(id=request.GET["akid"])[0],
+            encoder=encoder.AttackEncoder,
+            safe=False)
+    if "arid" in request.GET:
+        return JsonResponse(
+            models.Armor.objects.filter(id=request.GET["arid"])[0],
+            encoder=encoder.ArmorEncoder,
+            safe=False)
+    if "iid" in request.GET:
+        return JsonResponse(
+            models.Item.objects.filter(id=request.GET["iid"])[0],
+            encoder=encoder.ItemEncoder,
+            safe=False)
     return JsonResponse({})
 
 def view_char(request):
