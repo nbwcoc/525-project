@@ -66,7 +66,9 @@ class Spell(models.Model):
     """
     name = models.CharField(default="", max_length=255)
     level = models.IntegerField(default=0)
-    
+
+    def __str__(self):
+        return self.name
 
 class PlayerClass(models.Model):
     """
@@ -127,6 +129,7 @@ class PlayerClass(models.Model):
         "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"
         "0,0,0,0,0,0,0,0,0,0,0,0")
     spells_known = models.IntegerField(default=0)
+    spells = models.ManyToManyField(Spell)
 
 
 
@@ -345,6 +348,7 @@ class Armor(models.Model):
 
 class Item(models.Model):
     """
+    DOES NOT WORK
     Model for gear
 
     Item information listed:

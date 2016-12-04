@@ -14,28 +14,28 @@ class CharacterEncoder(DjangoJSONEncoder):
     def default(self, obj):
         if isinstance(obj, models.Character):
             return {
-                "name" = obj.name
-                "player_class" = obj.player_class
-                "background" = obj.background
-                "race" = obj.race
-                "alignment" = obj.alignment
-                "experience" = obj.experience
-                "strength" = obj.strength
-                "dexterity" = obj.dexterity
-                "constitution" = obj.constitution
-                "intelligence" = obj.intelligence
-                "wisdom" = obj.wisdom
-                "charisma" = obj.charisma
-                "max_hp" = obj.max_hp
-                "proficiencies" = obj.proficiencies
-                "notes" = obj.notes
-                "owner" = obj.owner
-                "can_view" = obj.can_view
-                "can_edit" = obj.can_edit
-                "equipment" = obj.equipment
-                "equipment_quantities" = obj.equipment_quantities
-                "current_hp" = obj.current_hp
-                "temp_hp" = obj.temp_hp
+                "name": obj.name,
+                "player_class": obj.player_class.id,
+                "background": obj.background.id,
+                "race": obj.race.id,
+                "alignment": obj.alignment,
+                "experience": obj.experience,
+                "strength": obj.strength,
+                "dexterity": obj.dexterity,
+                "constitution": obj.constitution,
+                "intelligence": obj.intelligence,
+                "wisdom": obj.wisdom,
+                "charisma": obj.charisma,
+                "max_hp": obj.max_hp,
+                "proficiencies": obj.proficiencies,
+                "notes": obj.notes,
+                "owner": obj.owner.id,
+                "can_view": [x.id for x in obj.can_view.get_queryset()],
+                "can_edit": [x.id for x in obj.can_edit.get_queryset()],
+                "equipment": [x.id for x in obj.equipment.get_queryset()],
+                "equipment_quantities": obj.equipment_quantities,
+                "current_hp": obj.current_hp,
+                "temp_hp": obj.temp_hp
             }
         return super(CharacterEncoder, self).default(obj)
 
@@ -49,8 +49,8 @@ class BackgroundEncoder(DjangoJSONEncoder):
     def default(self, obj):
         if isinstance(obj, models.Background):
             return {
-                "name" = obj.name
-                "skill_proficiencies" = obj.skill_proficiencies
+                "name": obj.name,
+                "skill_proficiencies": obj.skill_proficiencies
             }
         return super(BackgroundEncoder, self).default(obj)
 
@@ -64,14 +64,14 @@ class PlayerClassEncoder(DjangoJSONEncoder):
     def default(self, obj):
         if isinstance(obj, models.PlayerClass):
             return {
-                "name": obj.name
-                "save_proficiencies" = obj.save_proficiencies
-                "hit_die" = obj.hit_die
-                "primary_ability" = obj.primary_ability
-                "skill_proficiencies" = obj.skill_proficiencies
-                "skills_number" = obj.skills_number
-                "spell_slots" = obj.spell_slots
-                "spells_known" = obj.spells_known
+                "name": obj.name,
+                "save_proficiencies": obj.save_proficiencies,
+                "hit_die": obj.hit_die,
+                "primary_ability": obj.primary_ability,
+                "skill_proficiencies": obj.skill_proficiencies,
+                "skills_number": obj.skills_number,
+                "spell_slots": obj.spell_slots,
+                "spells_known": obj.spells_known
         }
         return super(PlayerClassEncoder, self).default(obj)
 
@@ -85,18 +85,21 @@ class RaceEncoder(DjangoJSONEncoder):
     def default(self, obj):
         if isinstance(obj, models.Race):
             return {
-                "name" = obj.name
-                "mandatory_ability_increases" = obj.mandatory_ability_increases
-                "optional_ability_count" =  obj.optional_ability_count
-                "speed" = obj.speed
-                "size_category" = obj.size_category
-                "darkvision" = obj.darkvision
-                "subrace_of" = obj.subrace_of
+                "name": obj.name,
+                "mandatory_ability_increases":
+                    obj.mandatory_ability_increases,
+                "optional_ability_count":  obj.optional_ability_count,
+                "speed": obj.speed,
+                "size_category": obj.size_category,
+                "darkvision": obj.darkvision,
+                "subrace_of": obj.subrace_of.id if obj.subrace_of != None
+                    else None
             }
         return super(RaceEncoder, self).default(obj)
 
-def AttackEncoder(DjangoJSONEncoder):
+class AttackEncoder(DjangoJSONEncoder):
     """
+    DOES NOT WORK
     Usage: JsonResponse(<single Attack object>, encoder=encoder.AttackEncoder,
                         safe=False)
     Formats an object for use with the default JSON encoder. For more 
@@ -105,18 +108,19 @@ def AttackEncoder(DjangoJSONEncoder):
     def default(self, obj):
         if isinstance(obj, models.Attack):
             return {
-                "name" = obj.name
-                "damage_roll" = obj.damage_roll
-                "damage_type" = obj.damage_type
-                "versatile_damage" = obj.versatile_damage
-                "short_range" = obj.short_range
-                "long_range" = obj.long_range
-                "properties" = obj.properties
+                "name": obj.name,
+                "damage_roll": obj.damage_roll,
+                "damage_type": obj.damage_type,
+                "versatile_damage": obj.versatile_damage,
+                "short_range": obj.short_range,
+                "long_range": obj.long_range,
+                "properties": obj.properties
             }
         return super(AttackEncoder, self).default(obj)
 
-def ArmorEncoder(DjangoJSONEncoder):
+class ArmorEncoder(DjangoJSONEncoder):
     """
+    DOES NOT WORK
     Usage: JsonResponse(<single Armor object>, encoder=encoder.ArmorEncoder,
                         safe=False)
     Formats an object for use with the default JSON encoder. For more 
@@ -125,15 +129,15 @@ def ArmorEncoder(DjangoJSONEncoder):
     def default(self, obj):
         if isinstance(obj, models.Armor):
             return {
-                "name" = obj.name
-                "base_armor_class" = obj.base_armor_class
-                "max_dex" = obj.max_dex
-                "min_str" = obj.min_str
-                "stealth_disadvantage" = obj.stealth_disadvantage
+                "name": obj.name,
+                "base_armor_class": obj.base_armor_class,
+                "max_dex": obj.max_dex,
+                "min_str": obj.min_str,
+                "stealth_disadvantage": obj.stealth_disadvantage
             }
         return super(ArmorEncoder, self).default(obj)
 
-def ItemEncoder(DjangoJSONEncoder):
+class ItemEncoder(DjangoJSONEncoder):
     """
     Usage: JsonResponse(<single Item object>, encoder=encoder.ItemEncoder,
                         safe=False)
@@ -143,12 +147,12 @@ def ItemEncoder(DjangoJSONEncoder):
     def default(self, obj):
         if isinstance(obj, models.Item):
             return {
-                "name" = obj.name
-                "cost" = obj.cost
-                "weight" = obj.weight
-                "attack" = obj.attack
-                "armor" = obj.armor
-                "requires_proficiency" = obj.requires_proficiency
-                "generic_proficiency" = obj.generic_proficiency
+                "name": obj.name,
+                "cost": obj.cost,
+                "weight": obj.weight,
+                "attack": obj.attack.id,
+                "armor": obj.armor.id,
+                "requires_proficiency": obj.requires_proficiency,
+                "generic_proficiency": obj.generic_proficiency
             }
         return super(ItemEncoder, self).default(obj)
