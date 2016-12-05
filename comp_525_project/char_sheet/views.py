@@ -16,6 +16,9 @@ def dump(request):
     rid: id in the database of the race to dump
     bid: id in the database of the background to dump
     pcid: id in the database of the class to dump
+    akid: id in the database of the attack to dump
+    arid: id in the database of the armor to dump
+    iid: id in the database of the item to dump
 
     Returns:
     JSON of the requested database row
@@ -136,11 +139,17 @@ def update(request):
     This can be sent either as the sole contents of the request body, or in
     a key named "data".
 
-    Returns an HTTP response code of 400 on a malformed request and 200 on a
-    success with the item's id in the body.
+    POST Parameters:
+    data: JSON data containing the request OR
+    none: in which case the JSON data must be only data in the request.
+
+    Returns:
+    HTTP 400 (Bad Request) on malformed request
+    HTTP 403 (Forbidden) if the user does not have adequate permission
+    HTTP 200 (OK) on success
+
+    On success, the item's id will be in the body of the response
     """
-    if request.method != "POST":
-        return HttpResponse(status=405)
 
     if len(request.POST) > 0:
         if not "data" in request.POST:
@@ -149,12 +158,25 @@ def update(request):
     else:
         data = json.loads(request.body.decode("utf-8"))
 
+
     if "cid" in data:
         data["cid"] = int(data["cid"])
         if data["cid"] == 0:
             new_item = models.Character()
         else:
             new_item = models.Character.objects.filter(id=data["cid"])[0]
+            
+        # this interface only looks for cids currently, and it likely will NOT
+        # be expanded to cover other database tables, so we're only testing for
+        # authentication here.
+        # Witness the drawback to object-oriented programming
+        if data["cid"] != 0:
+            if not (request.user in
+                    models.Character.objects.filter(
+                        id=data["cid"])[0].can_edit or
+                    request.user == models.Character.objects.filter(
+                        id=data["cid"])[0].owner):
+                return HttpResponse(status=403)
     # I don't think there's any reason to update this data from here
     # elif "rid" in data:
     #     data["rid"] = int(data["rid"])
@@ -193,6 +215,20 @@ def update(request):
             setattr(new_item, key, data[key])
     new_item.save()
     return HttpResponse(new_item.id, status=200)
+
+def api(request):
+    """
+    Calls the appropriate function to handle API calls based on HTTP method.
+    For GET calls, calls dump()
+    For POST calls, calls update()
+    If any other method is used, return HTTP status 405 (method not allowed).
+    """
+    if request.method == "GET":
+        dump(request)
+    else if request.method == "POST":
+        update(request)
+    else:
+        return HttpResponse(status=405)
 
 def test_post(request):
     return render(request, "char/testpost.html", {})
