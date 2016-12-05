@@ -23,12 +23,22 @@ def dump(request):
     Returns:
     JSON of the requested database row
     Empty JSON if no GET argument
+    OR
+    HTTP status 403 (Forbidden) with cid if the user doesn't have permission.
+    The user has permission either if they own the character or they are in
+    the can_view field.
     """
     if "cid" in request.GET:
-        return JsonResponse(
-            models.Character.objects.filter(id=request.GET["cid"])[0],
-            encoder=encoder.CharacterEncoder,
-            safe=False)
+        if not (request.user in models.Character.objects.filter(
+                        id=data["cid"])[0].can_view or
+                    request.user == models.Character.objects.filter(
+                        id=data["cid"])[0].owner):
+            return JsonResponse(
+                models.Character.objects.filter(id=request.GET["cid"])[0],
+                encoder=encoder.CharacterEncoder,
+                safe=False)
+        else:
+            return HttpResponse(status=403)
     if "rid" in request.GET:
         return JsonResponse(
             models.Race.objects.filter(id=request.GET["rid"])[0],
