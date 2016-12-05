@@ -1,12 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html ng-app="myApp">
     <head>
-        <title>Make a Campaign - Bruenor's Bash</title>
+        <title>My Character - Bruenor's Bash</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <!-- Bootcards CSS for desktop: -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/css/bootcards-desktop.min.css">
-        <link rel="stylesheet" href="{% static '/css/stylesheet.css'%}">
+        <link rel="stylesheet" href="{% static '/css/stylesheet.css' %}">
         <script	  src="https://code.jquery.com/jquery-3.1.1.min.js"
     			  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
     			  crossorigin="anonymous">
@@ -14,7 +14,6 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/js/bootcards.min.js"></script>
         <script src="https://use.fontawesome.com/829bd5f339.js"></script>
-        <script src="../../static/javascript/myScript.js"></script>
         <!-- Remove comment and make active below before looking for server usage -->
         <!-- <script src="{% static 'javascript/myScript.js' %}"></script> -->
     </head>
@@ -68,16 +67,16 @@
         <!-- End Top NavBar -->
         <div class="norm_container">
             <div class="container">
-                <p><h1>Make a Campaign</h1></p>
+                <p><h1>My Character</h1></p>
 
                 <!-- Begin Tabs -->
                 <div ng-controller="myCtrl">
                     <ul class="nav nav-pills nav-justified">
-                        <li class="active"><a class="tab-display" data-toggle="tab" href="#People">People</a>
+                        <li class="active"><a class="tab-display" data-toggle="tab" href="#Basic">Basic Details</a>
                         </li>
-                        <li class="disabled"><a class="tab-display" href="#Places">Places</a>
+                        <li><a class="tab-display" data-toggle="tab" href="#Skills">Skills and Stats</a>
                         </li>
-                        <li class="disabled"><a class="tab-display" href="#Purpose">Purpose</a>
+                        <li><a class="tab-display" data-toggle="tab" href="#Personal">Personal Background</a>
                         </li>
                     </ul>
                 </div>
@@ -91,33 +90,19 @@
                         Would love to find a way to use PJax in order to dynamically add content to page here,
                         so that way we don't repeat ouselves.
                     -->
-                    <div ng-controller="parseString" class="tab-pane fade in active" id="People">
-                        <h3>Choose The People for the Campaign</h3>
-                        <p>as well as some basic info</p>
-                        <div>
-                            <form>
-                                <div class="form-group">
-                                    <label for="questName">Name of Quest</label>
-                                    <input type="text" class="form-control" id="questName" placeholder="Name of Quest">
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">Password</label>
-                                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                                </div>
-                            </form>
-                        </div>
+                    <div ng-controller="characterBuild" class="tab-pane fade in active" id="Basic">
+                        <p>grabbing json stuff</p>
                     </div>
-                    <div ng-controller="parseString" class="tab-pane fade" id="Places">
-                        <h3>What places are there to go?</h3>
-                        <p>You can add more later</p>
+                    <div ng-controller="parseString" class="tab-pane fade" id="Skills">
                     </div>
-                    <div ng-controller="parseString" class="tab-pane fade" id="Purpose">
-                        <h3>What is the campaign's purpose</h3>
-                        <p>These are the overall goals of the campaign</p>
+                    <div ng-controller="parseString" class="tab-pane fade" id="Personal">
                     </div>
                     <!-- END Tab Content -->
                 </div>
             </div>
         </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
+
+        <script src="../../static/javascript/myScript.js"></script>
     </body>
 </html>
