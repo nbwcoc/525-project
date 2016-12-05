@@ -29,10 +29,13 @@ def dump(request):
     the can_view field.
     """
     if "cid" in request.GET:
-        if not (request.user in models.Character.objects.filter(
-                        id=data["cid"])[0].can_view or
+        print("DEBUG: can view:", models.Character.objects.filter(id=request.GET["cid"])[0].can_view.get_queryset())
+        print("DEBUG: owner:", models.Character.objects.filter(id=request.GET["cid"])[0].owner)
+        print("DEBUG: user in owner:", request.user == models.Character.objects.filter(id=request.GET["cid"])[0].owner)
+        if (request.user in models.Character.objects.filter(
+                        id=request.GET["cid"])[0].can_view.get_queryset() or
                     request.user == models.Character.objects.filter(
-                        id=data["cid"])[0].owner):
+                        id=request.GET["cid"])[0].owner):
             return JsonResponse(
                 models.Character.objects.filter(id=request.GET["cid"])[0],
                 encoder=encoder.CharacterEncoder,
@@ -181,9 +184,9 @@ def update(request):
         # authentication here.
         # Witness the drawback to object-oriented programming
         if data["cid"] != 0:
-            if not (request.user in
+            if (request.user in
                     models.Character.objects.filter(
-                        id=data["cid"])[0].can_edit or
+                        id=data["cid"])[0].can_edit.get_queryset() or
                     request.user == models.Character.objects.filter(
                         id=data["cid"])[0].owner):
                 return HttpResponse(status=403)
@@ -233,10 +236,11 @@ def api(request):
     For POST calls, calls update()
     If any other method is used, return HTTP status 405 (method not allowed).
     """
+    print("DEBUG: user:", request.user)
     if request.method == "GET":
-        dump(request)
+        return dump(request)
     elif request.method == "POST":
-        update(request)
+        return update(request)
     else:
         return HttpResponse(status=405)
 
