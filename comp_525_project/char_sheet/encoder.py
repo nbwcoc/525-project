@@ -99,7 +99,6 @@ class RaceEncoder(DjangoJSONEncoder):
 
 class AttackEncoder(DjangoJSONEncoder):
     """
-    DOES NOT WORK
     Usage: JsonResponse(<single Attack object>, encoder=encoder.AttackEncoder,
                         safe=False)
     Formats an object for use with the default JSON encoder. For more 
@@ -120,7 +119,6 @@ class AttackEncoder(DjangoJSONEncoder):
 
 class ArmorEncoder(DjangoJSONEncoder):
     """
-    DOES NOT WORK
     Usage: JsonResponse(<single Armor object>, encoder=encoder.ArmorEncoder,
                         safe=False)
     Formats an object for use with the default JSON encoder. For more 
@@ -156,3 +154,18 @@ class ItemEncoder(DjangoJSONEncoder):
                 "generic_proficiency": obj.generic_proficiency
             }
         return super(ItemEncoder, self).default(obj)
+
+class CampaignEncoder(DjangoJSONEncoder):
+    """
+    Usage: JsonResponse(<single Campaign object>,
+                        encoder=encoder.CampaignEncoder, safe=False)
+    Formats an object for use with the default JSON encoder. For more 
+    information, see DjangoJSONEncoder.
+    """
+    def default(self, obj):
+        if isinstance(obj, models.Campaign):
+            return {
+                "name": obj.name,
+                "players": [x.id for x in obj.players.get_queryset()],
+                "game_masters": [x.id for x in obj.game_masters.get_queryset()]
+            }

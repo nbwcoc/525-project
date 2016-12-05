@@ -16,16 +16,33 @@ def dump(request):
     rid: id in the database of the race to dump
     bid: id in the database of the background to dump
     pcid: id in the database of the class to dump
+    akid: id in the database of the attack to dump
+    arid: id in the database of the armor to dump
+    iid: id in the database of the item to dump
 
     Returns:
     JSON of the requested database row
     Empty JSON if no GET argument
+    OR
+    HTTP status 403 (Forbidden) with cid if the user doesn't have permission.
+    The user has permission either if they own the character or they are in
+    the can_view field.
     """
     if "cid" in request.GET:
-        return JsonResponse(
-            models.Character.objects.filter(id=request.GET["cid"])[0],
-            encoder=encoder.CharacterEncoder,
-            safe=False)
+        print("DEBUG: can view:", models.Character.objects.filter(id=request.GET["cid"])[0].can_view.get_queryset())
+        print("DEBUG: owner:", models.Character.objects.filter(id=request.GET["cid"])[0].owner)
+        print("DEBUG: user in owner:", request.user == models.Character.objects.filter(id=request.GET["cid"])[0].owner)
+        # parentheses used here for implicit line completion
+        if (request.user in models.Character.objects.filter(
+                    id=request.GET["cid"])[0].can_view.get_queryset() or
+                request.user == models.Character.objects.filter(
+                    id=request.GET["cid"])[0].owner):
+            return JsonResponse(
+                models.Character.objects.filter(id=request.GET["cid"])[0],
+                encoder=encoder.CharacterEncoder,
+                safe=False)
+        else:
+            return HttpResponse(status=403)
     if "rid" in request.GET:
         return JsonResponse(
             models.Race.objects.filter(id=request.GET["rid"])[0],
@@ -54,6 +71,11 @@ def dump(request):
     if "iid" in request.GET:
         return JsonResponse(
             models.Item.objects.filter(id=request.GET["iid"])[0],
+            encoder=encoder.ItemEncoder,
+            safe=False)
+    if "cpid" in request.GET:
+        return JsonResponse(
+            models.Campaign.objects.filter(id=request.GET["cpid"])[0],
             encoder=encoder.ItemEncoder,
             safe=False)
     return JsonResponse({})
@@ -136,11 +158,20 @@ def update(request):
     This can be sent either as the sole contents of the request body, or in
     a key named "data".
 
-    Returns an HTTP response code of 400 on a malformed request and 200 on a
-    success with the item's id in the body.
+    POST Parameters:
+    data: JSON data containing the request OR
+    none: in which case the JSON data must be only data in the request.
+
+    The JSON data MUST contain a database id in the key cid or cpid. cid will
+    affect the character table, and cpid will affect the campaign table.
+
+    Returns:
+    HTTP 400 (Bad Request) on malformed request (no id)
+    HTTP 403 (Forbidden) if the user does not have adequate permission
+    HTTP 200 (OK) on success
+
+    On success, the item's id will be in the body of the response
     """
-    if request.method != "POST":
-        return HttpResponse(status=405)
 
     if len(request.POST) > 0:
         if not "data" in request.POST:
@@ -149,12 +180,25 @@ def update(request):
     else:
         data = json.loads(request.body.decode("utf-8"))
 
+
     if "cid" in data:
         data["cid"] = int(data["cid"])
         if data["cid"] == 0:
             new_item = models.Character()
         else:
             new_item = models.Character.objects.filter(id=data["cid"])[0]
+            
+        # this interface only looks for cids currently, and it likely will NOT
+        # be expanded to cover other database tables, so we're only testing for
+        # authentication here.
+        # Witness the drawback to object-oriented programming
+        if data["cid"] != 0:
+            if not (request.user in models.Character.objects.filter(
+                                id=data["cid"])[0].can_edit.get_queryset() or
+                            request.user == models.Character.objects.filter(
+                                id=data["cid"])[0].owner):
+
+                return HttpResponse(status=403)
     # I don't think there's any reason to update this data from here
     # elif "rid" in data:
     #     data["rid"] = int(data["rid"])
@@ -174,6 +218,12 @@ def update(request):
     #         new_item = models.PlayerClass()
     #     else:
     #         new_item = models.PlayerClass.objects.filter(id=data["pcid"])[0]
+    elif "cpid" in data:
+        if data["cpid"] != 0:
+            if not request.user in models.Campaign.objects.filter(
+                id=data["cpid"])[0].game_masters.get_queryset():
+
+                return HttpResponse(status=403)
     else:
         print("DEBUG: invalid ID")
         return HttpResponse(status=400)
@@ -193,6 +243,22 @@ def update(request):
             setattr(new_item, key, data[key])
     new_item.save()
     return HttpResponse(new_item.id, status=200)
+
+def api(request):
+    """
+    Calls the appropriate function to handle API calls based on HTTP method.
+    For GET calls, calls dump()
+    For POST calls, calls update()
+    If any other method is used, return HTTP status 405 (method not allowed).
+    """
+    print("DEBUG: user:", request.user)
+    print("DEBUG: acceptable encodings:", request.META["HTTP_ACCEPT_ENCODING"])
+    if request.method == "GET":
+        return dump(request)
+    elif request.method == "POST":
+        return update(request)
+    else:
+        return HttpResponse(status=405)
 
 def test_post(request):
     return render(request, "char/testpost.html", {})

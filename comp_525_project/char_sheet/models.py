@@ -348,7 +348,6 @@ class Armor(models.Model):
 
 class Item(models.Model):
     """
-    DOES NOT WORK
     Model for gear
 
     Item information listed:
@@ -382,3 +381,19 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
+
+class Campaign(models.Model):
+    """
+    Class for campaigns
+
+    Has two fields:
+    char[255] name = ""
+    settings.AUTH_USER_MODEL[] players
+    settings.AUTH_USER_MODEL[] game_masters
+    """
+
+    name = models.CharField(default="", max_length=255)
+    players = models.ManyToManyField(settings.AUTH_USER_MODEL, 
+                                     related_name='+')
+    game_masters = models.ManyToManyField(settings.AUTH_USER_MODEL, 
+                                          related_name='+')
