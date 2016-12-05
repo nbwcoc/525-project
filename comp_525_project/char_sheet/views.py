@@ -235,7 +235,7 @@ def api(request):
     """
     if request.method == "GET":
         dump(request)
-    else if request.method == "POST":
+    elif request.method == "POST":
         update(request)
     else:
         return HttpResponse(status=405)
