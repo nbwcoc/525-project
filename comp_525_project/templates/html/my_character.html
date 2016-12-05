@@ -65,9 +65,9 @@
             </div>
         </div>
         <!-- End Top NavBar -->
-        <div class="norm_container">
+        <div class="norm_container" ng-controller="characterBuild">
             <div class="container">
-                <p><h1>My Character</h1></p>
+                <p><h1>My Character: <span ng-bind="myData.cid.name" style="font-weight: bold;"></span></h1></p>
 
                 <!-- Begin Tabs -->
                 <div ng-controller="myCtrl">
@@ -90,12 +90,240 @@
                         Would love to find a way to use PJax in order to dynamically add content to page here,
                         so that way we don't repeat ouselves.
                     -->
-                    <div ng-controller="characterBuild" class="tab-pane fade in active" id="Basic">
-                        <p>grabbing json stuff</p>
+                    <div class="tab-pane fade in active" id="Basic">
+                        <br>
+                        <p>This is the main panel that contains all of your basic information for your character. This informational page is used mainly
+                        for a quick view of what your character can do for simple interactions. If you need additional information on whether you can
+                        perform a certain skill, then please look under the <span style="font-weight: bold;">Skills and Stats</span> tab above. If you need
+                        additional information on how to play your character's personality, then please look under the <span style="font-weight: bold;">Personal Background</span> tab.</p>
+
+                        <div class="bootcards-list">
+                            <div class="list-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading clearfix">
+                                                <h3 class="text-center" ng-bind="myData.cid.name"></h3>
+                                            </div>
+                                            <div class="list-group">
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Race</p>
+                                                    <h4 class="list-group-item-heading"><span ng-bind="myData.rid.name"></span></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Class</p>
+                                                    <h4 class="list-group-item-heading"><span ng-bind="myData.pcid.name"></span> - Level <span ng-bind="myData.cid.level"></span></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Background</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.bid.name"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Additional Notes</p>
+                                                    <h5 class="list-group-item-heading" ng-bind="myData.cid.notes"></h5>
+                                                </div>
+                                            </div>
+                                            <div class="panel-footer">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading clearfix">
+                                                <h3 class="text-center">Items</h3>
+                                            </div>
+                                            <div class="list-group">
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Inventory</p>
+                                                    <h4 class="list-group-item-heading">Empty</h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Potions</p>
+                                                    <h4 class="list-group-item-heading">None</h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Armor</p>
+                                                    <h4 class="list-group-item-heading">None</h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Weapons</p>
+                                                    <h4 class="list-group-item-heading">None</h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Spells Known</p>
+                                                    <h4 class="list-group-item-heading">None</h4>
+                                                </div>
+                                            </div>
+                                            <div class="panel-footer">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div ng-controller="parseString" class="tab-pane fade" id="Skills">
-                    </div>
+                        <br>
+                        <div class="bootcards-list">
+                            <div class="list-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading clearfix">
+                                                <h3 class="text-center"> Base Skills</h3>
+                                            </div>
+                                            <div class="list-group">
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Strength</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.strength"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Dexterity</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.dexterity"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Constitution</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.constitution"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Intelligence</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.intelligence"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Wisdom</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.wisdom"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Charisma</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.charisma"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Speed</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.rid.speed"></h4>
+                                                </div>
+                                            </div>
+                                            <div class="panel-footer">
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <div class="col-sm-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading clearfix">
+                                                <h3 class="text-center"> Advance</h3>
+                                            </div>
+                                            <div class="list-group">
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Save Proficiencies</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.pcid.save_proficiencies"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Hit Die</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.pcid.hit_die"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Primary Ability</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.pcid.primary_ability"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Skill Proficiencies</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.pcid.skill_proficiencies"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Number of Skills</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.pcid.skills_number"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Skill Increases</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.rid.mandatory_ability_increases"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Spells Known</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.pcid.spells_known"></h4>
+                                                </div>
+                                            </div>
+                                            <div class="panel-footer">
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     <div ng-controller="parseString" class="tab-pane fade" id="Personal">
+                        <br>
+                        <div class="bootcards-list">
+                            <div class="list-group">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading clearfix">
+                                                <h3 class="text-center"> Personal Background</h3>
+                                            </div>
+                                            <div class="list-group">
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Race</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.rid.name"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Class</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.pcid.name"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Alignment</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.alignment"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Notes</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.notes"></h4>
+                                                </div>
+                                            </div>
+                                            <div class="panel-footer">
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <div class="col-sm-6">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading clearfix">
+                                                <h3 class="text-center"> Advance</h3>
+                                            </div>
+                                            <div class="list-group">
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Strength</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.strength"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Dexterity</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.dexterity"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Constitution</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.constitution"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Intelligence</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.intelligence"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Wisdom</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.wisdom"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Charisma</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.cid.charisma"></h4>
+                                                </div>
+                                                <div class="list-group-item">
+                                                    <p class="list-group-item-text">Speed</p>
+                                                    <h4 class="list-group-item-heading" ng-bind="myData.rid.speed"></h4>
+                                                </div>
+                                            </div>
+                                            <div class="panel-footer">
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- END Tab Content -->
                 </div>

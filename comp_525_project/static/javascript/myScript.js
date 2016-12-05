@@ -18,9 +18,9 @@ var app = angular.module("myApp", []);
 app.service('activeTabs', function() {
 	// IDs for the tabs that determine which tab is active, so we know where to post our tab content
 	var myIDs = {
-		"people": angular.element(document.querySelector('#People')),
-		"places": angular.element(document.querySelector('#Places')),
-		"purpose": angular.element(document.querySelector('#Purpose'))
+		"Basic": angular.element(document.querySelector('#Basic')),
+		"Skills": angular.element(document.querySelector('#Skills')),
+		"Personal": angular.element(document.querySelector('#Personal'))
 	};
 
 	// Bool to double check if we're allowed to get new content
@@ -69,9 +69,9 @@ app.service('activeTabs', function() {
 		// updates our service IDs so we know which one is active.
 		updateIDs: function() {
 			myIDs = {
-				"programming": angular.element(document.getElementById('ProgrammingJobs')),
-				"writing": angular.element(document.getElementById('WritingJobs')),
-				"all": angular.element(document.getElementById('AllJobs'))
+				"Basic": angular.element(document.getElementById('Basic')),
+				"Skills": angular.element(document.getElementById('Skills')),
+				"Personal": angular.element(document.getElementById('Personal'))
 			};
 		},
 
@@ -193,6 +193,7 @@ app.service('characterStuff', function($q, $http) {
 
         getURLStuff: function (reqUrl, reqParams) {
             var deferred = $q.defer();
+			console.log(reqParams);
     		var requestURL = url_builder(reqUrl, reqParams);
 
     		// For now, we must assume that we have a XML string to setup list-group stuff on the main page
@@ -297,19 +298,124 @@ app.controller("parseString", function($scope, $sce, $http, activeTabs) {
 	currentId = "People";
 });
 
-app.controller("characterBuild", function($scope, characterStuff) {
+app.controller("characterBuild", function($scope, characterStuff, activeTabs) {
+
+	var vm = this;
+	vm.response = {
+		"cid": "",
+		"rid": "",
+		"bid": "",
+		"pcid": ""
+	};
 
 	$scope.requestURL = "/char/dump/?";
 	$scope.requestParams = {
 		"cid": 1,
+		"rid": 1,
+		"bid": 1,
+		"pcid": 1
 	};
+	$scope.requestData = {}
 
-    characterStuff.getURLStuff($scope.requestURL, $scope.requestParams).then(function(data){
-        console.log("SUCCESS");
-        console.log(data);
-    }, function(data){
-        console.log("FAILED - " + data)
-    });
+	$scope.startHTML = function () {
+		var JsonToGive = {}
+
+
+		JsonToGive["cid"] = $scope.requestParams["cid"];
+		console.log(JsonToGive);
+	    characterStuff.getURLStuff($scope.requestURL, JsonToGive).then(function(successfulResolve){
+	        console.log("SUCCESS");
+	        //console.log(successfulResolve);
+			vm.response["cid"] = successfulResolve;
+	    }, function(failedReject){
+	        console.log("FAILED - " + failedReject)
+	    }).then(function () {
+			JsonToGive = {};
+			JsonToGive["rid"] = $scope.requestParams["rid"];
+			characterStuff.getURLStuff($scope.requestURL, JsonToGive).then(function(successfulResolve){
+		        console.log("SUCCESS");
+		        //console.log(successfulResolve);
+				vm.response["rid"] = successfulResolve;
+		    }, function(failedReject){
+		        console.log("FAILED - " + failedReject);
+		    }).then(function () {
+				JsonToGive = {};
+				JsonToGive["bid"] = $scope.requestParams["bid"];
+				characterStuff.getURLStuff($scope.requestURL, JsonToGive).then(function(successfulResolve){
+			        console.log("SUCCESS");
+			        //console.log(successfulResolve);
+					vm.response["bid"] = successfulResolve;
+			    }, function(failedReject){
+			        console.log("FAILED - " + failedReject);
+			    }).then(function () {
+					JsonToGive = {};
+					JsonToGive["pcid"] = $scope.requestParams["pcid"];
+					characterStuff.getURLStuff($scope.requestURL, JsonToGive).then(function(successfulResolve){
+				        console.log("SUCCESS");
+				        //console.log(successfulResolve);
+						vm.response["pcid"] = successfulResolve;
+				    }, function(failedReject){
+				        console.log("FAILED - " + failedReject);
+				    }).then(function () {
+						//All Data is now present
+
+						$scope.myData = vm.response;
+						$scope.myData["cid"]["level"] = calculateLevel($scope.myData["cid"]["experience"]);
+						console.log($scope.myData);
+				});
+			})
+		})
+	});
+
+		JsonToGive = {};
+		//console.log(vm.response);
+	}
+
+	$scope.startHTML();
 
     //characterStuff.getURLStuff($scope.requestURL, $scope.requestParams);
 });
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+};
+
+function calculateLevel(experience) {
+	levels = [
+        [0, 2],
+        [300, 2],
+        [900, 2],
+        [2700, 2],
+        [6500, 3],
+        [14000, 3],
+        [23000, 3],
+        [34000, 3],
+        [48000, 4],
+        [64000, 4],
+        [85000, 4],
+        [100000, 4],
+        [120000, 5],
+        [140000, 5],
+        [165000, 5],
+        [195000, 5],
+        [225000, 6],
+        [265000, 6],
+        [305000, 6],
+        [355000, 6],
+    ];
+
+	level = 0;
+
+	for (var level_pair in levels){
+		if (experience > levels[level_pair][0]) {
+			level += 1;
+		}
+	}
+
+	return level
+};
