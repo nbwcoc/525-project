@@ -32,10 +32,11 @@ def dump(request):
         print("DEBUG: can view:", models.Character.objects.filter(id=request.GET["cid"])[0].can_view.get_queryset())
         print("DEBUG: owner:", models.Character.objects.filter(id=request.GET["cid"])[0].owner)
         print("DEBUG: user in owner:", request.user == models.Character.objects.filter(id=request.GET["cid"])[0].owner)
+        # parentheses used here for implicit line completion
         if (request.user in models.Character.objects.filter(
-                        id=request.GET["cid"])[0].can_view.get_queryset() or
-                    request.user == models.Character.objects.filter(
-                        id=request.GET["cid"])[0].owner):
+                    id=request.GET["cid"])[0].can_view.get_queryset() or
+                request.user == models.Character.objects.filter(
+                    id=request.GET["cid"])[0].owner):
             return JsonResponse(
                 models.Character.objects.filter(id=request.GET["cid"])[0],
                 encoder=encoder.CharacterEncoder,
@@ -70,6 +71,11 @@ def dump(request):
     if "iid" in request.GET:
         return JsonResponse(
             models.Item.objects.filter(id=request.GET["iid"])[0],
+            encoder=encoder.ItemEncoder,
+            safe=False)
+    if "cpid" in request.GET:
+        return JsonResponse(
+            models.Campaign.objects.filter(id=request.GET["cpid"])[0],
             encoder=encoder.ItemEncoder,
             safe=False)
     return JsonResponse({})
@@ -156,8 +162,11 @@ def update(request):
     data: JSON data containing the request OR
     none: in which case the JSON data must be only data in the request.
 
+    The JSON data MUST contain a database id in the key cid or cpid. cid will
+    affect the character table, and cpid will affect the campaign table.
+
     Returns:
-    HTTP 400 (Bad Request) on malformed request
+    HTTP 400 (Bad Request) on malformed request (no id)
     HTTP 403 (Forbidden) if the user does not have adequate permission
     HTTP 200 (OK) on success
 
@@ -184,11 +193,11 @@ def update(request):
         # authentication here.
         # Witness the drawback to object-oriented programming
         if data["cid"] != 0:
-            if (request.user in
-                    models.Character.objects.filter(
-                        id=data["cid"])[0].can_edit.get_queryset() or
-                    request.user == models.Character.objects.filter(
-                        id=data["cid"])[0].owner):
+            if not (request.user in models.Character.objects.filter(
+                                id=data["cid"])[0].can_edit.get_queryset() or
+                            request.user == models.Character.objects.filter(
+                                id=data["cid"])[0].owner):
+
                 return HttpResponse(status=403)
     # I don't think there's any reason to update this data from here
     # elif "rid" in data:
@@ -209,6 +218,12 @@ def update(request):
     #         new_item = models.PlayerClass()
     #     else:
     #         new_item = models.PlayerClass.objects.filter(id=data["pcid"])[0]
+    elif "cpid" in data:
+        if data["cpid"] != 0:
+            if not request.user in models.Campaign.objects.filter(
+                id=data["cpid"])[0].game_masters.get_queryset():
+
+                return HttpResponse(status=403)
     else:
         print("DEBUG: invalid ID")
         return HttpResponse(status=400)
@@ -237,6 +252,7 @@ def api(request):
     If any other method is used, return HTTP status 405 (method not allowed).
     """
     print("DEBUG: user:", request.user)
+    print("DEBUG: acceptable encodings:", request.META["HTTP_ACCEPT_ENCODING"])
     if request.method == "GET":
         return dump(request)
     elif request.method == "POST":
