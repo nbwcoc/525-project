@@ -108,7 +108,57 @@ app.controller("parseString", function($scope, $sce, $http, activeTabs) {
 	// Empty container for response returns.
 	vm.response = [];
 
+	$scope.requestURL = "/char/dump/?";
+	$scope.requestParams = {
+		"cid": 1,
+	};
+
+	$scope.url_builder = function(baseUrl, GivenJson) {
+		/** This builds the api url for indeed's request
+		 *	PARAMETERS:
+		 *		baseUrl - the header url for indeed, typically is contained in $scope.indeedRequestUrl
+		 *		GivenJson - The JSON object that contains the different that are to be added to make the url
+		 * 	RETURNS:
+ 		 *		correctly built URL as a String
+		 */
+		var urlToReturn = "";
+		urlToReturn += baseUrl;
+		for (var key in GivenJson) {
+			if (GivenJson.hasOwnProperty(key)) { //THIS WORKS!!
+				urlToReturn += key + "=" + GivenJson[key] + "&";
+			}
+		}
+		return urlToReturn;
+	};
+
+	$scope.makeUrl = function () {
+		$scope.requestURL = $scope.url_builder($scope.requestURL, $scope.requestParams);
+		console.log($scope.requestURL);
+	}
+
+	$scope.URL_Handle = function() {
+		/** Function gets built URL, then uses $http to request a response. We should have the
+		*		functions built into $http for success or failure
+		*	PARAMETERS:
+		*		none
+		* 	RETURNS:
+		*		nothing
+		*/
+		makeUrl();
+
+		// For now, we must assume that we have a XML string to setup list-group stuff on the main page
+		$http.get($scope.requestUrl).then(function successCallback(response) {
+	    // this callback will be called asynchronously
+	    // when the response is available
+		vm.response = data.data;
+		console.log(vm.response);
+	  	}, function errorCallback(response) {
+	    // called asynchronously if an error occurs
+	    // or server returns response with an error status.
+		console.log("Error Occurred in char/dump call");
+		});
+	};
+
 	// Some defaults to get the ball rolling.
-	$scope.indeedStringBuild["q"] = "People";
 	currentId = "People";
 });
