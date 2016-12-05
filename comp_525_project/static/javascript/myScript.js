@@ -308,7 +308,7 @@ app.controller("characterBuild", function($scope, characterStuff, activeTabs) {
 		"pcid": ""
 	};
 
-	$scope.requestURL = "/char/dump/?";
+	$scope.requestURL = "/char/api/?";
 	$scope.requestParams = {
 		"cid": 1,
 		"rid": 1,
