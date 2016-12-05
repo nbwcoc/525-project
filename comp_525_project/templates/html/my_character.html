@@ -14,8 +14,6 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootcards/1.0.0/js/bootcards.min.js"></script>
         <script src="https://use.fontawesome.com/829bd5f339.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
-        <script src="../../static/javascript/myScript.js"></script>
         <!-- Remove comment and make active below before looking for server usage -->
         <!-- <script src="{% static 'javascript/myScript.js' %}"></script> -->
     </head>
@@ -92,9 +90,8 @@
                         Would love to find a way to use PJax in order to dynamically add content to page here,
                         so that way we don't repeat ouselves.
                     -->
-                    <div ng-controller="characterCall" class="tab-pane fade in active" id="Basic">
+                    <div ng-controller="characterBuild" class="tab-pane fade in active" id="Basic">
                         <p>grabbing json stuff</p>
-                        <p>{{jsonToForward}}<p>
                     </div>
                     <div ng-controller="parseString" class="tab-pane fade" id="Skills">
                     </div>
@@ -104,5 +101,8 @@
                 </div>
             </div>
         </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0-rc.2/angular.min.js"></script>
+
+        <script src="../../static/javascript/myScript.js"></script>
     </body>
 </html>
