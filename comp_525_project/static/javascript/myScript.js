@@ -298,6 +298,64 @@ app.controller("parseString", function($scope, $sce, $http, activeTabs) {
 	currentId = "People";
 });
 
+app.controller("loginController", function($scope, $http, $window) {
+	$scope.loginInfo = {};
+	$scope.user_username = "";
+	$scope.user_password = "";
+
+	$scope.url_builder = function(baseUrl, GivenJson) {
+		/** This builds the api url for indeed's request
+		 *	PARAMETERS:
+		 *		baseUrl - the header url for indeed, typically is contained in $scope.indeedRequestUrl
+		 *		GivenJson - The JSON object that contains the different that are to be added to make the url
+		 * 	RETURNS:
+ 		 *		correctly built URL as a String
+		 */
+		var urlToReturn = "";
+		urlToReturn += baseUrl;
+		for (var key in GivenJson) {
+			if (GivenJson.hasOwnProperty(key)) { //THIS WORKS!!
+				urlToReturn += key + "=" + GivenJson[key] + "&";
+			}
+		}
+		return urlToReturn;
+	};
+
+	$scope.login = function (required_url, required_params) {
+		var builtUrl = $scope.url_builder(required_url, required_params);
+
+		$http.post($scope.requestUrl).then(function successCallback(response) {
+	    // this callback will be called asynchronously
+	    // when the response is available
+
+			console.log(response);
+			if (response.status == 200) {
+				id = response.id
+				$window.location.href = '/my-character/'
+			}
+			else if (response.status == 403) {
+				console.log("Login Failed!! Response 403");
+			}
+
+	  	}, function errorCallback(response) {
+	    // called asynchronously if an error occurs
+	    // or server returns response with an error status.
+			console.log("Login Failed!! Improper Calling");
+			console.log(response);
+		});
+	};
+
+	$scope.submit = function () {
+		var reqURL = "/login";
+		var reqParams = {
+			"username": $scope.user_username,
+			"password": $scope.user_password
+		};
+
+		$scope.login(reqURL, reqParams);
+	};
+};
+
 app.controller("characterBuild", function($scope, characterStuff, activeTabs) {
 
 	var vm = this;
