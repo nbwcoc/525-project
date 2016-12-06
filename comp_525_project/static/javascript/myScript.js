@@ -346,6 +346,7 @@ app.controller("loginController", function($scope, $http, $window) {
 	};
 
 	$scope.submit = function () {
+		console.log("I just submitted");
 		var reqURL = "/login";
 		var reqParams = {
 			"username": $scope.user_username,
