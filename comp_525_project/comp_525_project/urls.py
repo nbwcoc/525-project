@@ -16,9 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.views.generic import TemplateView
 from django.conf.urls import url, include
+from . import views
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name="index.html"), name="index"),
+    url(r'^login/', views.logon, name="logon"),
     url(r'^char/', include("char_sheet.urls")),
     url(r'^admin/', admin.site.urls),
     url(r'^make-campaign/', TemplateView.as_view(template_name="html/m_campaign.html"), name="m_campaign"),

@@ -7,6 +7,15 @@ from . import encoder
 
 # Create your views here.
 
+def get_user_information(uid):
+    """
+    """
+    rv = {}
+    rv["chars_own"] = [x.id for x in models.Character.filter(owner=uid)]
+    rv["chars_view"] = [x.id for x in models.Character.filter(can_view=uid)]
+    rv["chars_edit"] = [x.id for x in models.Character.filter(can_edit=uid)]
+    rv["name"] = "aoe"
+
 def dump(request):
     """
     JSON database dump view
@@ -19,6 +28,7 @@ def dump(request):
     akid: id in the database of the attack to dump
     arid: id in the database of the armor to dump
     iid: id in the database of the item to dump
+    uid: id in the database of the user whose information to get.
 
     Returns:
     JSON of the requested database row
