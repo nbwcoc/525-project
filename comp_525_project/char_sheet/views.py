@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.http import HttpResponse
-from django.conf import settings
+from django.contrib import auth
 import json
 from . import models
 from . import encoder
@@ -16,7 +16,8 @@ def get_user_information(uid):
     rv["chars_own"] = [x.id for x in models.Character.objects.filter(owner=uid)]
     rv["chars_view"] = [x.id for x in models.Character.objects.filter(can_view=uid)]
     rv["chars_edit"] = [x.id for x in models.Character.objects.filter(can_edit=uid)]
-    rv["name"] = settings.AUTH_USER_MODEL.filter(id=uid)[0].name
+    rv["name"] = auth.models.User.objects.filter(id=uid)[0].get_username()
+    return rv
 
 def dump(request):
     """
