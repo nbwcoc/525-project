@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.http import HttpResponse
+from django.conf import settings
 import json
 from . import models
 from . import encoder
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -11,10 +13,10 @@ def get_user_information(uid):
     """
     """
     rv = {}
-    rv["chars_own"] = [x.id for x in models.Character.filter(owner=uid)]
-    rv["chars_view"] = [x.id for x in models.Character.filter(can_view=uid)]
-    rv["chars_edit"] = [x.id for x in models.Character.filter(can_edit=uid)]
-    rv["name"] = "aoe"
+    rv["chars_own"] = [x.id for x in models.Character.objects.filter(owner=uid)]
+    rv["chars_view"] = [x.id for x in models.Character.objects.filter(can_view=uid)]
+    rv["chars_edit"] = [x.id for x in models.Character.objects.filter(can_edit=uid)]
+    rv["name"] = settings.AUTH_USER_MODEL.filter(id=uid)[0].name
 
 def dump(request):
     """
@@ -88,6 +90,9 @@ def dump(request):
             models.Campaign.objects.filter(id=request.GET["cpid"])[0],
             encoder=encoder.ItemEncoder,
             safe=False)
+    if "uid" in request.GET:
+        return JsonResponse(get_user_information(request.GET["uid"]))
+
     return JsonResponse({})
 
 def view_char(request):
@@ -254,6 +259,7 @@ def update(request):
     new_item.save()
     return HttpResponse(new_item.id, status=200)
 
+@login_required
 def api(request):
     """
     Calls the appropriate function to handle API calls based on HTTP method.
