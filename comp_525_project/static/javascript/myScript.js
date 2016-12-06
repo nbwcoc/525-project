@@ -355,7 +355,7 @@ app.controller("loginController", function($scope, $http, $window) {
 
 		$scope.login(reqURL, reqParams);
 	};
-};
+});
 
 app.controller("characterBuild", function($scope, characterStuff, activeTabs) {
 
